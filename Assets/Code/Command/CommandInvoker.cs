@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class CommandInvoker
 {
@@ -7,6 +8,7 @@ public class CommandInvoker
 
     public void ExecuteCommand(ICommand command)
     {
+        Debug.Log("Executing command" + command.GetType().Name);
         command.Execute();
         undoStack.Push(command);
         redoStack.Clear();
@@ -14,6 +16,7 @@ public class CommandInvoker
 
     public void Undo()
     {
+        Debug.Log("Undo");
         if (undoStack.Count > 0)
         {
             ICommand command = undoStack.Pop();
@@ -24,6 +27,7 @@ public class CommandInvoker
 
     public void Redo()
     {
+        Debug.Log("Redo");
         if (redoStack.Count > 0)
         {
             ICommand command = redoStack.Pop();

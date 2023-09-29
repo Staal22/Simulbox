@@ -1,19 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
 public class AddVoxelCommand : ICommand
 {
-    // private Voxel voxel;
-    //
-    // public AddVoxelCommand(Voxel voxel)
-    // {
-    //     this.voxel = voxel;
-    // }
+    private GameObject _voxel;
+    private VoxelSpawner _voxelSpawner;
+    private VoxelType _voxelType;
+    private Vector3 _spawnPoint;
+    
+    public AddVoxelCommand(VoxelSpawner voxelSpawner, Vector3 spawnPoint)
+    {
+        _voxelSpawner = voxelSpawner;
+        _spawnPoint = spawnPoint;
+        _voxelType = VoxelManager.Instance.CurrentVoxelType;
+    }
 
     public void Execute()
     {
-        // Add the voxel to the scene
+        _voxel = _voxelSpawner.SpawnVoxel(_spawnPoint, _voxelType);
     }
 
     public void Undo()
     {
-        // Remove the voxel from the scene
+        Debug.Log("Undoing spawn voxel");
+        Object.Destroy(_voxel);
     }
 }

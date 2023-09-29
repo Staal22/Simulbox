@@ -8,41 +8,37 @@ public class VoxelSpawner : MonoBehaviour
     [SerializeField] private GameObject sandPrefab;
     [SerializeField] private GameObject grassPrefab;
     [SerializeField] private GameObject waterPrefab;
-    private VoxelType _voxelToSpawn;
+    // private VoxelType _voxelToSpawn;
+    private GameObject _voxel = null;
     
-    private void OnEnable()
-    {
-        VoxelManager.Instance.OnVoxelTypeChanged += SetType;
-    }
-
-    private void OnDisable()
-    {
-        VoxelManager.Instance.OnVoxelTypeChanged -= SetType;
-    }
-
-    private void SetType(VoxelType newType)
-    {
-        _voxelToSpawn = newType;
-    }
+    // private void Start()
+    // {
+    //     VoxelManager.Instance.OnVoxelTypeChanged += SetType;
+    // }
+    //
+    // private void SetType(VoxelType newType)
+    // {
+    //     _voxelToSpawn = newType;
+    // }
     
-    private void SpawnVoxel(VoxelType selectedType)
+    public GameObject SpawnVoxel(Vector3 spawnPoint, VoxelType voxelToSpawn)
     {
-        switch (selectedType)
+        Debug.Log("Spawning voxel");
+        switch (voxelToSpawn)
         {
             default:
                 break;
             case VoxelType.Sand:
-                Instantiate(sandPrefab, transform.position, Quaternion.identity);
-                break;
-            case VoxelType.Water:
-                Instantiate(waterPrefab, transform.position, Quaternion.identity);
+                _voxel = Instantiate(sandPrefab, spawnPoint, Quaternion.identity);
                 break;
             case VoxelType.Grass:
-                Instantiate(waterPrefab, transform.position, Quaternion.identity);
+                _voxel = Instantiate(grassPrefab, spawnPoint, Quaternion.identity);
                 break;
-            
-            
+            case VoxelType.Water:
+                _voxel = Instantiate(waterPrefab, spawnPoint, Quaternion.identity);
+                break;
         }
+        return _voxel;
     }
 }
 
