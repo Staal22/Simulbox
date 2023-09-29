@@ -34,11 +34,11 @@ public class InputManager : MonoBehaviour
                 _commandInvoker.ExecuteCommand(command);
             }
         }
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+        if (/*Input.GetKey(KeyCode.LeftControl) && */Input.GetKeyDown(KeyCode.Z))
         {
             _commandInvoker.Undo();
         }
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y))
+        if (/*Input.GetKey(KeyCode.LeftControl) && */Input.GetKeyDown(KeyCode.Y))
         {
             _commandInvoker.Redo();
         }
