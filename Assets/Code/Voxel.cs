@@ -2,13 +2,13 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public enum VoxelType
+public enum VoxelType : int
 {
-    Base,
-    Sand,
-    Water,
-    Wood,
-    Grass
+    Base = 0,
+    Sand = 1,
+    Water = 2,
+    Wood = 3,
+    Grass = 4
 }
 
 public class Voxel : MonoBehaviour
@@ -34,27 +34,29 @@ public class Voxel : MonoBehaviour
             default:
                 throw new NotImplementedException();
             case VoxelType.Sand:
-                material = SceneTools.Instance.voxelMaterials[0];
+                material = SceneTools.Instance.voxelMaterials[(int)type];
                 _density = 1f;
                 _flammable = false;
                 break;
             case VoxelType.Water:
-                material = SceneTools.Instance.voxelMaterials[1];
+                material = SceneTools.Instance.voxelMaterials[(int)type];
                 _density = 0.5f;
                 _flammable = false;
                 break;
             case VoxelType.Wood:
-                material = SceneTools.Instance.voxelMaterials[2];
+                material = SceneTools.Instance.voxelMaterials[(int)type];
                 _density = 1f;
                 _flammable = true;
                 break;
             case VoxelType.Grass:
-                material = SceneTools.Instance.voxelMaterials[3];
+                material = SceneTools.Instance.voxelMaterials[(int)type];
                 _density = 1f;
                 _flammable = true;
                 break;
         }
         _meshRenderer.material = material;
     }
+
+
 }
 

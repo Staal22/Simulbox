@@ -5,7 +5,6 @@ using TMPro;
 
 public class InteractMenu : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI selectedTypeText;
     private Action<VoxelType> _onNewVoxelTypeSelected;
     private VoxelType _selectedVoxelType = VoxelType.Sand;
     
@@ -18,7 +17,6 @@ public class InteractMenu : MonoBehaviour
     public void SetSelectedVoxelType(VoxelType newType)
     {
         _selectedVoxelType = newType;
-        selectedTypeText.text = newType.ToString(); // Update UI to display the selected type
         _onNewVoxelTypeSelected?.Invoke(_selectedVoxelType);
     }
 }
