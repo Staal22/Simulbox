@@ -5,11 +5,11 @@ using UnityEngine.Serialization;
 
 public class VoxelSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject sandPrefab;
-    [SerializeField] private GameObject grassPrefab;
-    [SerializeField] private GameObject waterPrefab;
+    [SerializeField] private GameObject voxelPrefab;
+    // [SerializeField] private GameObject sandPrefab;
+    // [SerializeField] private GameObject grassPrefab;
+    // [SerializeField] private GameObject waterPrefab;
     // private VoxelType _voxelToSpawn;
-    private GameObject _voxel = null;
     
     // private void Start()
     // {
@@ -23,22 +23,25 @@ public class VoxelSpawner : MonoBehaviour
     
     public GameObject SpawnVoxel(Vector3 spawnPoint, VoxelType voxelToSpawn)
     {
-        Debug.Log("Spawning voxel");
-        switch (voxelToSpawn)
-        {
-            default:
-                break;
-            case VoxelType.Sand:
-                _voxel = Instantiate(sandPrefab, spawnPoint, Quaternion.identity);
-                break;
-            case VoxelType.Grass:
-                _voxel = Instantiate(grassPrefab, spawnPoint, Quaternion.identity);
-                break;
-            case VoxelType.Water:
-                _voxel = Instantiate(waterPrefab, spawnPoint, Quaternion.identity);
-                break;
-        }
-        return _voxel;
+        // Debug.Log("Spawning voxel");
+        // switch (voxelToSpawn)
+        // {
+        //     default:
+        //         break;
+        //     case VoxelType.Sand:
+        //         _voxel = Instantiate(sandPrefab, spawnPoint, Quaternion.identity);
+        //         break;
+        //     case VoxelType.Grass:
+        //         _voxel = Instantiate(grassPrefab, spawnPoint, Quaternion.identity);
+        //         break;
+        //     case VoxelType.Water:
+        //         _voxel = Instantiate(waterPrefab, spawnPoint, Quaternion.identity);
+        //         break;
+        // }
+        var voxel = Instantiate(voxelPrefab, spawnPoint, Quaternion.identity);
+        var voxelComponent = voxel.GetComponent<Voxel>();
+        voxelComponent.Init(voxelToSpawn);
+        return voxel;
     }
 }
 
