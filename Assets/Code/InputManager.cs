@@ -6,15 +6,9 @@ using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
-    // public static InputManager Instance;
-    
     [SerializeField] private Camera mainCamera;
     private VoxelSpawner _voxelSpawner;
     private CommandInvoker _commandInvoker;
-    // private void Awake()
-    // {
-    //     Instance = this;
-    // }
 
     private void Start()
     {
