@@ -28,40 +28,36 @@ public class Container : MonoBehaviour
     {
         _data.Clear();
     }
-    
-    private void ConfigureComponents()
-    {
-        _meshRenderer = GetComponent<MeshRenderer>();
-        _meshFilter = GetComponent<MeshFilter>();
-        _meshCollider = GetComponent<MeshCollider>();
-    }
 
     public void GenerateMesh()
     {
         _meshData.ClearData();
-
-        Vector3 blockPos;
-        Voxel block = new Voxel{ID = 1};
-
-        int counter = 0;
-        Vector3[] faceVertices = new Vector3[4];
-        Vector2[] faceUVs = new Vector2[4];
+        
+        var counter = 0;
+        var faceVertices = new Vector3[4];
+        var faceUVs = new Vector2[4];
 
         foreach (var kvp in _data)
         {
-            if (kvp.Value.ID == 0)
+            // Only draw solid blocks
+            if (!kvp.Value.IsSolid)
                 continue;
             
-            blockPos = kvp.Key;
-            block = kvp.Value;
+            var blockPos = kvp.Key;
+            var block = kvp.Value;
+            
+            var voxelColor = WorldManager.Instance.worldColors[(int)block.Type - 1];
+            var voxelColorAlpha = voxelColor.color;
+            voxelColorAlpha.a = 1;
+            var voxelMetallicSmoothness = new Vector2(voxelColor.metallic, voxelColor.smoothness);
             
             // Iterate through all 6 faces of the cube
             for (int i = 0; i < 6; i++)
             {
                 if (this[blockPos + VoxelFaceChecks[i]].IsSolid)
                     continue;
+                
                 // Draw this face
-            
                 // Collect the vertices of this face from the default set and add block position
                 for (int j = 0; j < 4; j++)
                 {
@@ -73,6 +69,8 @@ public class Container : MonoBehaviour
                 {
                     _meshData.Vertices.Add(faceVertices[VoxelTris[i, j]]);
                     _meshData.UVs.Add(faceUVs[VoxelTris[i, j]]);
+                    _meshData.UVs2.Add(voxelMetallicSmoothness);
+                    _meshData.Colors.Add(voxelColorAlpha);
                     _meshData.Triangles.Add(counter++);
                 }
             }
@@ -94,23 +92,18 @@ public class Container : MonoBehaviour
     
     public Voxel this[Vector3 index]
     {
-        get
-        {
-            if (_data.TryGetValue(index, out var item))
-                return item;
-            else
-                return emptyVoxel;
-        }
-        set
-        {
-            if (_data.ContainsKey(index))
-                _data[index] = value;
-            else
-                _data.Add(index, value);
-        }
+        get => _data.TryGetValue(index, out var item) ? item : EmptyVoxel;
+        set => _data[index] = value;
     }
     
-    public static Voxel emptyVoxel = new Voxel{ID = 0};
+    private void ConfigureComponents()
+    {
+        _meshRenderer = GetComponent<MeshRenderer>();
+        _meshFilter = GetComponent<MeshFilter>();
+        _meshCollider = GetComponent<MeshCollider>();
+    }
+    
+    public static Voxel EmptyVoxel = new Voxel{Type = VoxelType.Base};
     
     #region Mesh Data
     public struct MeshData
@@ -119,6 +112,8 @@ public class Container : MonoBehaviour
         public List<Vector3> Vertices;
         public List<int> Triangles;
         public List<Vector2> UVs;
+        public List<Vector2> UVs2;
+        public List<Color> Colors;
 
         public bool Initialized;
         
@@ -129,6 +124,8 @@ public class Container : MonoBehaviour
                 Vertices = new List<Vector3>();
                 Triangles = new List<int>();
                 UVs = new List<Vector2>();
+                UVs2 = new List<Vector2>();
+                Colors = new List<Color>();
                 
                 Initialized = true;
                 Mesh = new Mesh();
@@ -138,6 +135,9 @@ public class Container : MonoBehaviour
                 Vertices.Clear();
                 Triangles.Clear();
                 UVs.Clear();
+                UVs2.Clear();
+                Colors.Clear();
+                
                 Mesh.Clear();
             }
         }
@@ -145,7 +145,10 @@ public class Container : MonoBehaviour
         {
             Mesh.SetVertices(Vertices);
             Mesh.SetTriangles(Triangles, 0, false);
+            Mesh.SetColors(Colors);
+            
             Mesh.SetUVs(0, UVs);
+            Mesh.SetUVs(2, UVs2);
             
             Mesh.Optimize();
             Mesh.RecalculateNormals();
@@ -204,7 +207,4 @@ public class Container : MonoBehaviour
         { 0, 2, 3, 0, 3, 1 }
     };
     #endregion
-
-
-
 }
