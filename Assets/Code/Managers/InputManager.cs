@@ -29,17 +29,18 @@ public class InputManager : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hitInfo))
             {
-                ICommand command = new AddVoxelCommand(_voxelSpawner, hitInfo.point);
-                _commandInvoker.ExecuteCommand(command);
+                _voxelSpawner.SpawnVoxel(hitInfo.point, VoxelManager.Instance.CurrentVoxelType);
+                // ICommand command = new AddVoxelCommand(_voxelSpawner, hitInfo.point);
+                // _commandInvoker.ExecuteCommand(command);
             }
         }
-        if (/*Input.GetKey(KeyCode.LeftControl) && */Input.GetKeyDown(KeyCode.Z))
-        {
-            _commandInvoker.Undo();
-        }
-        if (/*Input.GetKey(KeyCode.LeftControl) && */Input.GetKeyDown(KeyCode.Y))
-        {
-            _commandInvoker.Redo();
-        }
+        // if (Input.GetKeyDown(KeyCode.Z))
+        // {
+        //     _commandInvoker.Undo();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Y))
+        // {
+        //     _commandInvoker.Redo();
+        // }
     }
 }

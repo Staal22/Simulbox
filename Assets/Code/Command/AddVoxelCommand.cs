@@ -19,7 +19,7 @@ public class AddVoxelCommand : ICommand
 
     public void Execute()
     {
-        _voxel = _voxelSpawner.SpawnVoxel(_spawnPoint, _voxelType);
+        // _voxel = _voxelSpawner.SpawnVoxel(_spawnPoint, _voxelType);
     }
 
     public void Undo()
