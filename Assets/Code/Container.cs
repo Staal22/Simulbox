@@ -9,7 +9,9 @@ public class Container : MonoBehaviour
 {
     public Vector3 containerPosition;
     
+    private Dictionary<Vector3, Voxel> _data;
     private MeshData _meshData;
+    
     private MeshRenderer _meshRenderer;
     private MeshFilter _meshFilter;
     private MeshCollider _meshCollider;
@@ -17,8 +19,14 @@ public class Container : MonoBehaviour
     public void Initialize(Material mat, Vector3 position)
     {
         ConfigureComponents();
+        _data = new Dictionary<Vector3, Voxel>();
         containerPosition = position;
         _meshRenderer.material = mat;
+    }
+
+    public void ClearData()
+    {
+        _data.Clear();
     }
     
     private void ConfigureComponents()
@@ -32,30 +40,41 @@ public class Container : MonoBehaviour
     {
         _meshData.ClearData();
 
-        Vector3 blockPos = new Vector3(8, 8, 8);
+        Vector3 blockPos;
         Voxel block = new Voxel{ID = 1};
 
         int counter = 0;
         Vector3[] faceVertices = new Vector3[4];
         Vector2[] faceUVs = new Vector2[4];
-        
-        // Iterate through all 6 faces of the cube
-        for (int i = 0; i < 6; i++)
+
+        foreach (var kvp in _data)
         {
-            // Draw this face
+            if (kvp.Value.ID == 0)
+                continue;
             
-            // Collect the vertices of this face from the default set and add block position
-            for (int j = 0; j < 4; j++)
+            blockPos = kvp.Key;
+            block = kvp.Value;
+            
+            // Iterate through all 6 faces of the cube
+            for (int i = 0; i < 6; i++)
             {
-                faceVertices[j] = VoxelVertices[VoxelVertexIndex[i, j]] + blockPos;
-                faceUVs[j] = VoxelUVs[j];
-            }
-            // Iterate through the 6 vertices of this face (2 triangles)
-            for (int j = 0; j < 6; j++)
-            {
-                _meshData.Vertices.Add(faceVertices[VoxelTris[i, j]]);
-                _meshData.UVs.Add(faceUVs[VoxelTris[i, j]]);
-                _meshData.Triangles.Add(counter++);
+                if (this[blockPos + VoxelFaceChecks[i]].IsSolid)
+                    continue;
+                // Draw this face
+            
+                // Collect the vertices of this face from the default set and add block position
+                for (int j = 0; j < 4; j++)
+                {
+                    faceVertices[j] = VoxelVertices[VoxelVertexIndex[i, j]] + blockPos;
+                    faceUVs[j] = VoxelUVs[j];
+                }
+                // Iterate through the 6 vertices of this face (2 triangles)
+                for (int j = 0; j < 6; j++)
+                {
+                    _meshData.Vertices.Add(faceVertices[VoxelTris[i, j]]);
+                    _meshData.UVs.Add(faceUVs[VoxelTris[i, j]]);
+                    _meshData.Triangles.Add(counter++);
+                }
             }
         }
     }
@@ -72,6 +91,26 @@ public class Container : MonoBehaviour
         if (_meshData.Vertices.Count > 3)
             _meshCollider.sharedMesh = _meshData.Mesh;
     }
+    
+    public Voxel this[Vector3 index]
+    {
+        get
+        {
+            if (_data.TryGetValue(index, out var item))
+                return item;
+            else
+                return emptyVoxel;
+        }
+        set
+        {
+            if (_data.ContainsKey(index))
+                _data[index] = value;
+            else
+                _data.Add(index, value);
+        }
+    }
+    
+    public static Voxel emptyVoxel = new Voxel{ID = 0};
     
     #region Mesh Data
     public struct MeshData
@@ -130,12 +169,21 @@ public class Container : MonoBehaviour
         new (1, 1, 1)
 
     };
+    private static readonly Vector3[] VoxelFaceChecks = new Vector3[6]
+    {
+        new (0, 0, -1),
+        new (0, 0, 1),
+        new (-1, 0, 0),
+        new (1, 0, 0),
+        new (0, -1, 0),
+        new (0, 1, 0)
+    };
     private static readonly int[,] VoxelVertexIndex = new int[6, 4]
     {
         { 0, 1, 2, 3 },
         { 4, 5, 6, 7 },
         { 4, 0, 6, 2 },
-        { 5, 1, 3, 7 },
+        { 5, 1, 7, 3 },
         { 0, 1, 4, 5 },
         { 2, 3, 6, 7 }
     };
