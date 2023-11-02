@@ -36,27 +36,27 @@ public class OLD_Voxel : MonoBehaviour
             default:
                 throw new NotImplementedException();
             case VoxelType.Sand:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
+                // material = SceneTools.Instance.voxelMaterials[(int)type];
                 // _density = 1f;
                 // _flammable = false;
                 break;
             case VoxelType.Water:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
+                // material = SceneTools.Instance.voxelMaterials[(int)type];
                 // _density = 0.5f;
                 // _flammable = false;
                 break;
             case VoxelType.Wood:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
+                // material = SceneTools.Instance.voxelMaterials[(int)type];
                 // _density = 1f;
                 // _flammable = true;
                 break;
             case VoxelType.Grass:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
+                // material = SceneTools.Instance.voxelMaterials[(int)type];
                 // _density = 1f;
                 // _flammable = true;
                 break;
         }
-        _meshRenderer.material = material;
+        // _meshRenderer.material = material;
     }
 
 

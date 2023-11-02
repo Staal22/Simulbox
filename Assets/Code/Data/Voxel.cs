@@ -4,10 +4,10 @@ using UnityEngine;
 public enum VoxelType : int
 {
     Base = 0,
-    Sand = 1,
-    Water = 2,
+    Grass = 1,
+    Sand = 2,
     Wood = 3,
-    Grass = 4
+    Water = 4
 }
 
 public struct Voxel

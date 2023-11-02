@@ -275,9 +275,9 @@ MonoBehaviour:
   - color: {r: 0.060460012, g: 0.4627451, b: 0.056737266, a: 0}
     metallic: 0
     smoothness: 0.9
-  - color: {r: 0.745283, g: 0.5732523, b: 0.06679422, a: 0}
+  - color: {r: 0.6037736, g: 0.47411606, b: 0.093983635, a: 0}
     metallic: 0
-    smoothness: 0.2
+    smoothness: 0.1
 --- !u!4 &749758476
 Transform:
   m_ObjectHideFlags: 0
