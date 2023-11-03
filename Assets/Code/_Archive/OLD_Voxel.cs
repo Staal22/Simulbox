@@ -29,7 +29,7 @@ public class OLD_Voxel : MonoBehaviour
     public void Init(VoxelType inType)
     {
         type = inType;
-        Material material;
+        // Material material;
         // initialize values based on type
         switch (type)
         {

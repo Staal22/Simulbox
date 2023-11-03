@@ -79,19 +79,6 @@ public class WorldManager : MonoBehaviour
                 break;
         }
         
-        // example
-        // for (int x = 0; x < 16; x++)
-        // {
-        //     for (int z = 0; z < 16; z++)
-        //     {
-        //         int height = Random.Range(1, 17);
-        //         for (int y = 0; y < height; y++)
-        //         {
-        //             _container[new Vector3(x, y, z)] = new Voxel{Type = voxelToSpawn};
-        //         }
-        //     }
-        // }
-        
         _container.GenerateMesh();
         _container.UploadMesh();
     }
