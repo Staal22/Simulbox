@@ -31,16 +31,17 @@ public class Voxel : MonoBehaviour
         // initialize values based on type
         switch (type)
         {
+            case VoxelType.Base:
             default:
                 throw new NotImplementedException();
+            case VoxelType.Grass:
+                material = SceneTools.Instance.voxelMaterials[(int)type];
+                _density = 1f;
+                _flammable = true;
+                break;
             case VoxelType.Sand:
                 material = SceneTools.Instance.voxelMaterials[(int)type];
                 _density = 1f;
-                _flammable = false;
-                break;
-            case VoxelType.Water:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
-                _density = 0.5f;
                 _flammable = false;
                 break;
             case VoxelType.Wood:
@@ -48,10 +49,10 @@ public class Voxel : MonoBehaviour
                 _density = 1f;
                 _flammable = true;
                 break;
-            case VoxelType.Grass:
+            case VoxelType.Water:
                 material = SceneTools.Instance.voxelMaterials[(int)type];
-                _density = 1f;
-                _flammable = true;
+                _density = 0.5f;
+                _flammable = false;
                 break;
         }
         _meshRenderer.material = material;

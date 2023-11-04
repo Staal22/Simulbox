@@ -1,3 +1,6 @@
 # Word
 Documents/~$*.docx
 Documents/*.tmp
+
+# Obsidian
+.obsidian
