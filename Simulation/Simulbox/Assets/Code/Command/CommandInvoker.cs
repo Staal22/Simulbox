@@ -3,36 +3,30 @@ using UnityEngine;
 
 public class CommandInvoker
 {
-    private Stack<ICommand> undoStack = new Stack<ICommand>();
-    private Stack<ICommand> redoStack = new Stack<ICommand>();
+    private static readonly Stack<ICommand> UndoStack = new();
+    private static readonly Stack<ICommand> RedoStack = new();
 
     public void ExecuteCommand(ICommand command)
     {
         // Debug.Log("Executing command" + command.GetType().Name);
         command.Execute();
-        undoStack.Push(command);
-        redoStack.Clear();
+        UndoStack.Push(command);
+        RedoStack.Clear();
     }
 
     public void Undo()
     {
-        // Debug.Log("Undo");
-        if (undoStack.Count > 0)
-        {
-            ICommand command = undoStack.Pop();
-            command.Undo();
-            redoStack.Push(command);
-        }
+        if (UndoStack.Count <= 0) return;
+        var command = UndoStack.Pop();
+        command.Undo();
+        RedoStack.Push(command);
     }
 
     public void Redo()
     {
-        // Debug.Log("Redo");
-        if (redoStack.Count > 0)
-        {
-            ICommand command = redoStack.Pop();
-            command.Execute();
-            undoStack.Push(command);
-        }
+        if (RedoStack.Count <= 0) return;
+        var command = RedoStack.Pop();
+        command.Execute();
+        UndoStack.Push(command);
     }
 }

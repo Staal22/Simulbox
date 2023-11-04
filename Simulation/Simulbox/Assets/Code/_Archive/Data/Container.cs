@@ -9,7 +9,7 @@ public class Container : MonoBehaviour
 {
     // public Vector3 containerPosition;
     
-    private Dictionary<Vector3, Voxel> _data;
+    private Dictionary<Vector3, Voxel_NotMono> _data;
     private MeshData _meshData;
     
     private MeshRenderer _meshRenderer;
@@ -19,7 +19,7 @@ public class Container : MonoBehaviour
     public void Initialize(Material mat, Vector3 position)
     {
         ConfigureComponents();
-        _data = new Dictionary<Vector3, Voxel>();
+        _data = new Dictionary<Vector3, Voxel_NotMono>();
         // containerPosition = position;
         _meshRenderer.material = mat;
     }
@@ -90,7 +90,7 @@ public class Container : MonoBehaviour
             _meshCollider.sharedMesh = _meshData.Mesh;
     }
     
-    public Voxel this[Vector3 index]
+    public Voxel_NotMono this[Vector3 index]
     {
         get => _data.TryGetValue(index, out var item) ? item : EmptyVoxel;
         set => _data[index] = value;
@@ -103,7 +103,7 @@ public class Container : MonoBehaviour
         _meshCollider = GetComponent<MeshCollider>();
     }
     
-    private static readonly Voxel EmptyVoxel = new Voxel{Type = VoxelType.Base};
+    private static readonly Voxel_NotMono EmptyVoxel = new Voxel_NotMono{Type = VoxelType.Base};
     
     #region Mesh Data
     private struct MeshData

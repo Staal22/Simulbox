@@ -51,7 +51,7 @@ public class WorldManager : MonoBehaviour
                         {
                             if (Vector3.Distance(new Vector3(x, y, z), spawnPoint) < 2.5f)
                             {
-                                container[new Vector3(x, y, z)] = new Voxel{Type = VoxelType.Sand};
+                                container[new Vector3(x, y, z)] = new Voxel_NotMono{Type = VoxelType.Sand};
                             }
                         }
                     }
@@ -70,7 +70,7 @@ public class WorldManager : MonoBehaviour
                         var height = Random.Range(1, 5);
                         for (var y = spawnPoint.y; y < spawnPoint.y + height; y++)
                         {
-                            container[new Vector3(x, y, z)] = new Voxel{Type = VoxelType.Grass};
+                            container[new Vector3(x, y, z)] = new Voxel_NotMono{Type = VoxelType.Grass};
                         }
                     }
                 }
