@@ -8,12 +8,10 @@ public class InputManager : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
     private CommandInvoker _commandInvoker;
-    // private WorldManager _worldManager;
 
     private void Start()
     {
         _commandInvoker = new CommandInvoker();
-        // _worldManager = WorldManager.Instance;
     }
 
     private void Update()
@@ -25,12 +23,11 @@ public class InputManager : MonoBehaviour
             {
                 return;
             }
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hitInfo))
             {
-                // _worldManager.SpawnVoxelChunk(hitInfo.point, VoxelManager.Instance.CurrentVoxelType);
-                // VoxelManager.Instance.SpawnVoxel(hitInfo.point, VoxelManager.Instance.CurrentVoxelType);
-                ICommand command = new AddVoxelCommand(hitInfo.point);
+                // ICommand command = new AddVoxelCommand(hitInfo.point);
+                ICommand command = new AddVoxelGroup(hitInfo.point);
                 _commandInvoker.ExecuteCommand(command);
             }
         }

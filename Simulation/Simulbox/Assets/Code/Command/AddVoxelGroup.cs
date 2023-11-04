@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class AddVoxelGroup : ICommand
 {
-    private GameObject _voxelGroup;
-    private VoxelType _voxelType;
-    private Vector3 _spawnPoint;
+    private List<GameObject> _voxelGroup;
+    private readonly VoxelType _voxelType;
+    private readonly Vector3 _spawnPoint;
     
     public AddVoxelGroup(Vector3 spawnPoint)
     {
@@ -16,12 +16,12 @@ public class AddVoxelGroup : ICommand
 
     public void Execute()
     {
-        // _voxelGroup = WorldManager.Instance.SpawnVoxelChunk(_spawnPoint, _voxelType);
+        _voxelGroup = VoxelManager.Instance.SpawnVoxelGroup(_spawnPoint, _voxelType);
     }
 
     public void Undo()
     {
         Debug.Log("Undoing spawn voxel group");
-        Object.Destroy(_voxelGroup);
+        foreach (var gameObject in _voxelGroup) Object.Destroy(gameObject);
     }
 }
