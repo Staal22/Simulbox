@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshCollider))]
 public class Container : MonoBehaviour
 {
-    public Vector3 containerPosition;
+    // public Vector3 containerPosition;
     
     private Dictionary<Vector3, Voxel> _data;
     private MeshData _meshData;
@@ -20,7 +20,7 @@ public class Container : MonoBehaviour
     {
         ConfigureComponents();
         _data = new Dictionary<Vector3, Voxel>();
-        containerPosition = position;
+        // containerPosition = position;
         _meshRenderer.material = mat;
     }
 
@@ -40,7 +40,7 @@ public class Container : MonoBehaviour
         foreach (var kvp in _data)
         {
             // Only draw solid blocks
-            if (!kvp.Value.IsSolid)
+            if (kvp.Value.Empty)
                 continue;
             
             var blockPos = kvp.Key;
@@ -54,7 +54,7 @@ public class Container : MonoBehaviour
             // Iterate through all 6 faces of the cube
             for (int i = 0; i < 6; i++)
             {
-                if (this[blockPos + VoxelFaceChecks[i]].IsSolid)
+                if (!this[blockPos + VoxelFaceChecks[i]].Empty)
                     continue;
                 
                 // Draw this face
@@ -103,10 +103,10 @@ public class Container : MonoBehaviour
         _meshCollider = GetComponent<MeshCollider>();
     }
     
-    public static Voxel EmptyVoxel = new Voxel{Type = VoxelType.Base};
+    private static readonly Voxel EmptyVoxel = new Voxel{Type = VoxelType.Base};
     
     #region Mesh Data
-    public struct MeshData
+    private struct MeshData
     {
         public Mesh Mesh;
         public List<Vector3> Vertices;
@@ -115,11 +115,11 @@ public class Container : MonoBehaviour
         public List<Vector2> UVs2;
         public List<Color> Colors;
 
-        public bool Initialized;
+        private bool _initialized;
         
         public void ClearData()
         {
-            if (!Initialized)
+            if (!_initialized)
             {
                 Vertices = new List<Vector3>();
                 Triangles = new List<int>();
@@ -127,7 +127,7 @@ public class Container : MonoBehaviour
                 UVs2 = new List<Vector2>();
                 Colors = new List<Color>();
                 
-                Initialized = true;
+                _initialized = true;
                 Mesh = new Mesh();
             }
             else
@@ -141,7 +141,7 @@ public class Container : MonoBehaviour
                 Mesh.Clear();
             }
         }
-        public void UploadMesh(bool sharedVertices = false)
+        public void UploadMesh()
         {
             Mesh.SetVertices(Vertices);
             Mesh.SetTriangles(Triangles, 0, false);
@@ -172,7 +172,7 @@ public class Container : MonoBehaviour
         new (1, 1, 1)
 
     };
-    private static readonly Vector3[] VoxelFaceChecks = new Vector3[6]
+    private static readonly Vector3[] VoxelFaceChecks =
     {
         new (0, 0, -1),
         new (0, 0, 1),
@@ -181,7 +181,7 @@ public class Container : MonoBehaviour
         new (0, -1, 0),
         new (0, 1, 0)
     };
-    private static readonly int[,] VoxelVertexIndex = new int[6, 4]
+    private static readonly int[,] VoxelVertexIndex =
     {
         { 0, 1, 2, 3 },
         { 4, 5, 6, 7 },
@@ -190,14 +190,14 @@ public class Container : MonoBehaviour
         { 0, 1, 4, 5 },
         { 2, 3, 6, 7 }
     };
-    private static readonly Vector2[] VoxelUVs = new Vector2[4]
+    private static readonly Vector2[] VoxelUVs =
     {
         new (0, 0),
         new (0, 1),
         new (1, 0),
         new (1, 1)
     };
-    private static readonly int[,] VoxelTris = new int[6, 6]
+    private static readonly int[,] VoxelTris =
     {
         { 0, 2, 3, 0, 3, 1 },
         { 0, 1, 2, 1, 3, 2 },

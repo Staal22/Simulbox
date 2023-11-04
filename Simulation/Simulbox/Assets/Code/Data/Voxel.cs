@@ -15,7 +15,7 @@ public struct Voxel
 {
     public VoxelType Type;
     
-    public bool IsSolid => Type != VoxelType.Base;
+    public bool Empty => Type == VoxelType.Base;
     
     
 

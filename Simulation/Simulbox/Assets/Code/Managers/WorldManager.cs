@@ -10,8 +10,6 @@ public class WorldManager : MonoBehaviour
     
     public Material worldMaterial;
     public VoxelColor[] worldColors;
-    
-    private Container _container;
 
     private void Awake()
     {
@@ -26,7 +24,7 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    public void SpawnVoxelChunk(Vector3 spawnPoint, VoxelType voxelToSpawn)
+    public GameObject SpawnVoxelChunk(Vector3 spawnPoint, VoxelType voxelToSpawn)
     {
         var cont = new GameObject("Container")
         {
@@ -35,8 +33,8 @@ public class WorldManager : MonoBehaviour
                 parent = transform
             }
         };
-        _container = cont.AddComponent<Container>();
-        _container.Initialize(worldMaterial, Vector3.zero); //TODO initialize container with spawn point
+        var container = cont.AddComponent<Container>();
+        container.Initialize(worldMaterial, Vector3.zero); //TODO initialize container with spawn point
 
         switch (voxelToSpawn)
         {
@@ -53,7 +51,7 @@ public class WorldManager : MonoBehaviour
                         {
                             if (Vector3.Distance(new Vector3(x, y, z), spawnPoint) < 2.5f)
                             {
-                                _container[new Vector3(x, y, z)] = new Voxel{Type = VoxelType.Sand};
+                                container[new Vector3(x, y, z)] = new Voxel{Type = VoxelType.Sand};
                             }
                         }
                     }
@@ -72,14 +70,16 @@ public class WorldManager : MonoBehaviour
                         var height = Random.Range(1, 5);
                         for (var y = spawnPoint.y; y < spawnPoint.y + height; y++)
                         {
-                            _container[new Vector3(x, y, z)] = new Voxel{Type = VoxelType.Grass};
+                            container[new Vector3(x, y, z)] = new Voxel{Type = VoxelType.Grass};
                         }
                     }
                 }
                 break;
         }
         
-        _container.GenerateMesh();
-        _container.UploadMesh();
+        container.GenerateMesh();
+        container.UploadMesh();
+
+        return cont;
     }
 }
