@@ -22,7 +22,6 @@ public class AddVoxel : ICommand
 
     public void Undo()
     {
-        Debug.Log("Undoing spawn voxel");
         Object.Destroy(_voxel);
     }
 }

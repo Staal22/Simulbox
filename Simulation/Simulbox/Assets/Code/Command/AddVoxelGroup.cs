@@ -21,7 +21,6 @@ public class AddVoxelGroup : ICommand
 
     public void Undo()
     {
-        Debug.Log("Undoing spawn voxel group");
         foreach (var gameObject in _voxelGroup) Object.Destroy(gameObject);
     }
 }
