@@ -42,7 +42,8 @@ public class InputManager : MonoBehaviour
         {
             _yOffset += Input.mouseScrollDelta.y * -1f;
         }
-        
+        // TODO - clamp yOffset to a reasonable range
+        // TODO - fix initial placement to be on the ground
         var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit))
         {
