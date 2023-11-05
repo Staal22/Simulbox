@@ -5,13 +5,15 @@ using UnityEngine.Serialization;
 
 public class IndicatorObject : MonoBehaviour
 {
-    [field: SerializeField] private Mesh[] outlineMeshes;
+    // [field: SerializeField] private Mesh[] outlineMeshes;
 
     private MeshFilter _meshFilter;
+    private MeshRenderer _meshRenderer;
     
     private void Awake()
     {
         _meshFilter = GetComponent<MeshFilter>();
+        _meshRenderer = GetComponent<MeshRenderer>();
         VoxelManager.Instance.OnVoxelTypeChanged += HandleVoxelTypeChanged;
     }
 
@@ -28,10 +30,12 @@ public class IndicatorObject : MonoBehaviour
                 default:
                 throw new System.ArgumentOutOfRangeException(nameof(voxelType), voxelType, null);
             case VoxelType.Grass:
-                _meshFilter.mesh = outlineMeshes[(int)VoxelType.Grass];
+                _meshFilter.mesh = VoxelManager.Instance.IndicatorMesh(VoxelType.Grass);
+                _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Grass];
                 break;
             case VoxelType.Sand:
-                _meshFilter.mesh = outlineMeshes[(int)VoxelType.Sand];
+                _meshFilter.mesh = VoxelManager.Instance.IndicatorMesh(VoxelType.Sand);
+                _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Sand];
                 break;
             case VoxelType.Wood:
                 break;

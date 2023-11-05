@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 162754735}
   - component: {fileID: 162754734}
   - component: {fileID: 162754733}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: E_Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2307,8 +2307,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2145224228164640678}
   - {fileID: 761922907}
+  - {fileID: 2145224228164640678}
   - {fileID: 89116627}
   m_Father: {fileID: 7654645364866506365}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -84,5 +84,78 @@ public class VoxelManager : MonoBehaviour
 
         return voxelGroup;
     }
+
+    public Mesh IndicatorMesh(VoxelType voxelType)
+    {
+        var voxelGroup = new List<GameObject>();
+        switch (voxelType)
+        {
+            case VoxelType.Base:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(voxelType), voxelType, null);
+            case VoxelType.Sand:
+                // uniform sphere
+                for (var x = -2.5f; x < 2.5f; x++)
+                {
+                    for (var z = -2.5f; z < 2.5f; z++)
+                    {
+                        for (var y = -2.5f; y < 2.5f; y++)
+                        {
+                            if (Vector3.Distance(new Vector3(x, y, z), new Vector3(0, 0, 0)) < 2.5f)
+                            {
+                                var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
+                                var voxelComponent = voxel.GetComponent<Voxel>();
+                                voxelComponent.Init(voxelType);
+                                voxelGroup.Add(voxel);
+                            }
+                        }
+                    }
+                }
+                break;
+            case VoxelType.Water:
+                break;
+            case VoxelType.Wood:
+                break;
+            case VoxelType.Grass:
+                // random height box
+                for (var x = -2.5f; x < 2.5f; x++)
+                {
+                    for (var z = -2.5f; z < 2.5f; z++)
+                    {
+                        var height = Random.Range(1, 5);
+                        for (var y = 0; y < 0 + height; y++)
+                        {
+                            var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
+                            var voxelComponent = voxel.GetComponent<Voxel>();
+                            voxelComponent.Init(voxelType);
+                            voxelGroup.Add(voxel);
+                        }
+                    }
+                }
+                break;
+        }
+        var count = voxelGroup.Count;
+        //Create CombineInstance from the amount of voxels
+        var cInstance = new CombineInstance[count];
+        
+        //Initialize CombineInstance from MeshFilter of each voxel
+        for (int i = 0; i < count; i++)
+        {
+            //Get current Mesh Filter and initialize each CombineInstance 
+            MeshFilter cFilter = voxelGroup[i].GetComponent<MeshFilter>();
+
+            //Get each Mesh and position
+            cInstance[i].mesh = cFilter.sharedMesh;
+            cInstance[i].transform = cFilter.transform.localToWorldMatrix;
+            //Hide each MeshFilter or Destroy the GameObject 
+            cFilter.gameObject.SetActive(false);
+        }
+
+        //Create combined mesh
+        var mesh = new Mesh();
+        mesh.CombineMeshes(cInstance);
+        
+        return mesh;
+    }
     
 }
