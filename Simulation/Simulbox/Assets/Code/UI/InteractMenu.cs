@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System;
-using TMPro;
 
 public class InteractMenu : MonoBehaviour
 {

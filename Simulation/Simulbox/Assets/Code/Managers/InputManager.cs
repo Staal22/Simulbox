@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private GameObject outlineIndicatorPrefab;
     
     private CommandInvoker _commandInvoker;
+    private float _yOffset;
 
     private void Start()
     {
@@ -26,21 +27,37 @@ public class InputManager : MonoBehaviour
             return;
         }
         outlineIndicatorPrefab.SetActive(true);
-        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            outlineIndicatorPrefab.transform.position = hit.point;
+            // Reset position
+            _yOffset = 0f;
         }
-        if (Input.GetMouseButtonDown(0))
+        // Adjust zOffset based on mouse scroll wheel
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (Physics.Raycast(ray, out var hitInfo))
-            {
-                // ICommand command = new AddVoxelCommand(hitInfo.point);
-                ICommand command = new AddVoxelGroup(hitInfo.point);
-                _commandInvoker.ExecuteCommand(command);
-            }
+            _yOffset += Input.mouseScrollDelta.y * -3f;
+        }
+        else
+        {
+            _yOffset += Input.mouseScrollDelta.y * -1f;
         }
         
+        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit))
+        {
+            var point = hit.point + Vector3.up * _yOffset;
+            
+            outlineIndicatorPrefab.transform.position = point;
+            if (Input.GetMouseButtonDown(0))
+            {
+                // ICommand command = new AddVoxelCommand(hitInfo.point);
+                ICommand command = new AddVoxelGroup(point);
+                _commandInvoker.ExecuteCommand(command);
+                _yOffset = 0f;
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Z))
         {
             _commandInvoker.Undo();
