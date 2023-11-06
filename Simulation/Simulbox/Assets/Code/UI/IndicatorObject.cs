@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 
 public class IndicatorObject : MonoBehaviour
 {
+    [SerializeField] private Texture2D fireCursor;
+    
     private MeshFilter _meshFilter;
     private MeshRenderer _meshRenderer;
     
@@ -36,17 +38,20 @@ public class IndicatorObject : MonoBehaviour
             case VoxelType.Grass:
                 _meshFilter.mesh = VoxelManager.Instance.GetIndicatorMesh(VoxelType.Grass);
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Grass];
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
             case VoxelType.Sand:
                 _meshFilter.mesh = VoxelManager.Instance.GetIndicatorMesh(VoxelType.Sand);
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Sand];
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
             case VoxelType.Wood:
                 break;
             case VoxelType.Water:
                 break;
             case VoxelType.Fire:
-                // TODO - Disable mesh preview and use cursor icon instead
+                _meshFilter.mesh = null;
+                Cursor.SetCursor(fireCursor, Vector2.zero, CursorMode.Auto);
                 break;
         }
     }
