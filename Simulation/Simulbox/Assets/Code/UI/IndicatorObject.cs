@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class IndicatorObject : MonoBehaviour
 {
-    [SerializeField] private Texture2D fireCursor;
+    // [SerializeField] private Texture2D fireCursor;
     
     private MeshFilter _meshFilter;
     private MeshRenderer _meshRenderer;
@@ -51,7 +51,7 @@ public class IndicatorObject : MonoBehaviour
                 break;
             case VoxelType.Fire:
                 _meshFilter.mesh = null;
-                Cursor.SetCursor(fireCursor, Vector2.zero, CursorMode.Auto);
+                // Cursor.SetCursor(fireCursor, Vector2.zero, CursorMode.Auto);
                 break;
         }
     }
