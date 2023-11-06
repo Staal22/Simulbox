@@ -8,11 +8,6 @@ public class FireEffect : MonoBehaviour
     private const float BurnTimeSeconds = 5;
     private float _burnCounter;
 
-    private void Start()
-    {
-        Ignite();
-    }
-
     private void FixedUpdate()
     {
         _burnCounter += Time.deltaTime;
@@ -22,15 +17,9 @@ public class FireEffect : MonoBehaviour
             Extinguish();
         }
     }
-
-    private void Ignite()
-    {
-        // TODO - code to ignite the fire, like playing an animation
-    }
     
     private void Extinguish()
     {
-        // TODO - code to extinguish the fire, like playing an animation and then disabling the gameObject
         Destroy(gameObject);
     }
 
