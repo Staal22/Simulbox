@@ -9,7 +9,8 @@ public class VoxelManager : MonoBehaviour
 {
     public static VoxelManager Instance;
     [SerializeField] private GameObject voxelPrefab;
-
+    [SerializeField] private GameObject fireEffectPrefab;
+    
     public VoxelType CurrentVoxelType { get; private set; } = VoxelType.Grass;
     public Action<VoxelType> OnVoxelTypeChanged;
 
@@ -79,6 +80,9 @@ public class VoxelManager : MonoBehaviour
             case VoxelType.Wood:
                 break;
             case VoxelType.Water:
+                break;
+            case VoxelType.Fire:
+                Instantiate(fireEffectPrefab, spawnPoint, Quaternion.identity);
                 break;
         }
         

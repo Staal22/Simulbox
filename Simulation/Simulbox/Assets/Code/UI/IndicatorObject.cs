@@ -45,6 +45,9 @@ public class IndicatorObject : MonoBehaviour
                 break;
             case VoxelType.Water:
                 break;
+            case VoxelType.Fire:
+                // TODO - Disable mesh preview and use cursor icon instead
+                break;
         }
     }
 }
