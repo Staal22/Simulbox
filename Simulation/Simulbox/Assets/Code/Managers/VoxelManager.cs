@@ -8,8 +8,11 @@ using Random = UnityEngine.Random;
 public class VoxelManager : MonoBehaviour
 {
     public static VoxelManager Instance;
+    
     [SerializeField] private GameObject voxelPrefab;
     [SerializeField] private GameObject fireEffectPrefab;
+    
+    public Mesh[] indicatorMeshes;
     
     public VoxelType CurrentVoxelType { get; private set; } = VoxelType.Grass;
     public Action<VoxelType> OnVoxelTypeChanged;
@@ -18,7 +21,16 @@ public class VoxelManager : MonoBehaviour
     {
         Instance = this;
     }
-    
+
+    private void Start()
+    {
+        indicatorMeshes = new Mesh[Enum.GetNames(typeof(VoxelType)).Length];
+        for (var i = 1; i < indicatorMeshes.Length; i++)
+        {
+            indicatorMeshes[i] = GetIndicatorMesh((VoxelType) i);
+        }
+    }
+
     public void SetCurrentVoxelType(VoxelType newType)
     {
         CurrentVoxelType = newType;
@@ -48,7 +60,7 @@ public class VoxelManager : MonoBehaviour
                     for (var z = spawnPoint.z -2.5f; z < spawnPoint.z + 2.5f; z++)
                     {
                         var height = Random.Range(1, 5);
-                        for (var y = spawnPoint.y; y < spawnPoint.y + height; y++)
+                        for (var y = spawnPoint.y + 1f; y < spawnPoint.y + 1f + height; y++)
                         {
                             var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
                             var voxelComponent = voxel.GetComponent<Voxel>();
@@ -89,55 +101,10 @@ public class VoxelManager : MonoBehaviour
         return voxelGroup;
     }
 
-    public Mesh GetIndicatorMesh(VoxelType voxelType)
+    private Mesh GetIndicatorMesh(VoxelType voxelType)
     {
-        var voxelGroup = new List<GameObject>();
-        switch (voxelType)
-        {
-            case VoxelType.Base:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(voxelType), voxelType, null);
-            case VoxelType.Grass:
-                // Random height box
-                for (var x = -2.5f; x < 2.5f; x++)
-                {
-                    for (var z = -2.5f; z < 2.5f; z++)
-                    {
-                        var height = Random.Range(1, 5);
-                        for (var y = 0; y < 0 + height; y++)
-                        {
-                            var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
-                            var voxelComponent = voxel.GetComponent<Voxel>();
-                            voxelComponent.Init(voxelType);
-                            voxelGroup.Add(voxel);
-                        }
-                    }
-                }
-                break;
-            case VoxelType.Sand:
-                // Uniform sphere
-                for (var x = -2.5f; x < 2.5f; x++)
-                {
-                    for (var z = -2.5f; z < 2.5f; z++)
-                    {
-                        for (var y = -2.5f; y < 2.5f; y++)
-                        {
-                            if (Vector3.Distance(new Vector3(x, y, z), new Vector3(0, 0, 0)) < 2.5f)
-                            {
-                                var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
-                                var voxelComponent = voxel.GetComponent<Voxel>();
-                                voxelComponent.Init(voxelType);
-                                voxelGroup.Add(voxel);
-                            }
-                        }
-                    }
-                }
-                break;
-            case VoxelType.Wood:
-                break;
-            case VoxelType.Water:
-                break;
-        }
+         var voxelGroup = SpawnVoxelGroup(Vector3.zero, voxelType);
+
         var count = voxelGroup.Count;
         // Create CombineInstance from the amount of voxels
         var cInstance = new CombineInstance[count];
