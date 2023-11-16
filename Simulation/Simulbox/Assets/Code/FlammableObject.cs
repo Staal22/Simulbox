@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class FlammableObject : MonoBehaviour, IFlammable
 {
+    public event Action OnDisintegrated;
+    
     private GameObject _fireEffectPrefab;
     private MeshRenderer _meshRenderer;
+    private const float TimeToLive = 5f;
     [NonSerialized] public bool Burning;
 
     private void Awake()
@@ -19,13 +22,19 @@ public class FlammableObject : MonoBehaviour, IFlammable
         _fireEffectPrefab = VoxelManager.Instance.fireEffectPrefab;
     }
 
-    public void Ignite(float timeToLive)
+    public void Ignite()
     {
         Burning = true;
         // change material color to reflect being burnt
         _meshRenderer.material.color = Color.black;
         // destroy self after a few seconds
-        Destroy(gameObject, timeToLive);
+        Invoke(nameof(Disintegrate), TimeToLive);
         Instantiate(_fireEffectPrefab, transform.position, Quaternion.identity);
+    }
+    
+    private void Disintegrate()
+    {
+        OnDisintegrated?.Invoke();
+        Destroy(gameObject);
     }
 }

@@ -91,8 +91,38 @@ public class VoxelManager : MonoBehaviour
                 }
                 break;
             case VoxelType.Wood:
+                // Cube
+                for (var x = spawnPoint.x -2.5f; x < spawnPoint.x + 2.5f; x++)
+                {
+                    for (var z = spawnPoint.z -2.5f; z < spawnPoint.z + 2.5f; z++)
+                    {
+                        for (var y = spawnPoint.y -2.5f; y < spawnPoint.y + 2.5f; y++)
+                        {
+                            var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
+                            var voxelComponent = voxel.GetComponent<Voxel>();
+                            voxelComponent.Init(voxelToSpawn);
+                            voxelGroup.Add(voxel);
+                        }
+                    }
+                }
                 break;
             case VoxelType.Water:
+                for (var x = spawnPoint.x -2.5f; x < spawnPoint.x + 2.5f; x++)
+                {
+                    for (var z = spawnPoint.z -2.5f; z < spawnPoint.z + 2.5f; z++)
+                    {
+                        for (var y = spawnPoint.y -2.5f; y < spawnPoint.y + 2.5f; y++)
+                        {
+                            if (Vector3.Distance(new Vector3(x, y, z), spawnPoint) < 2.5f)
+                            {
+                                var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
+                                var voxelComponent = voxel.GetComponent<Voxel>();
+                                voxelComponent.Init(voxelToSpawn);
+                                voxelGroup.Add(voxel);
+                            }
+                        }
+                    }
+                }
                 break;
             case VoxelType.Fire:
                 Instantiate(fireEffectPrefab, spawnPoint, Quaternion.identity);

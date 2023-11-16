@@ -6,12 +6,11 @@ using UnityEngine;
 public class FireEffect : MonoBehaviour
 {
     private readonly List<FlammableObject> _flammables = new();
-    private const float BurnTimeSeconds = 5;
     private float _burnCounter;
 
     private void Start()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position + new Vector3(0,2,0), 2.5f);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position + new Vector3(0,2,0), 2f);
         
         foreach (var hitCollider in hitColliders)
         {
@@ -21,17 +20,10 @@ public class FireEffect : MonoBehaviour
             if (flammable.Burning) continue;
             
             _flammables.Add(flammable);
+            flammable.OnDisintegrated += Extinguish;
         }
-    }
-
-    private void FixedUpdate()
-    {
-        _burnCounter += Time.deltaTime;
-        BurnFlammables();
-        if (_burnCounter >= BurnTimeSeconds)
-        {
-            Extinguish();
-        }
+        
+        InvokeRepeating(nameof(BurnFlammables), 0.3f, 0.3f);
     }
     
     private void Extinguish()
@@ -45,14 +37,7 @@ public class FireEffect : MonoBehaviour
         if (flammable == null) return;
         if (other.gameObject.GetComponent<FlammableObject>().Burning) return;
         _flammables.Add(flammable);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        var flammable = other.gameObject.GetComponent<FlammableObject>();
-        if (flammable == null) return;
-        if (other.gameObject.GetComponent<FlammableObject>().Burning) return;
-        _flammables.Remove(flammable);
+        flammable.OnDisintegrated += Extinguish;
     }
 
     private void BurnFlammables()
@@ -66,7 +51,7 @@ public class FireEffect : MonoBehaviour
             }
             else
             {
-                _flammables[i].Ignite(BurnTimeSeconds);
+                _flammables[i].Ignite();
             }
         }
     }

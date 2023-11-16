@@ -5,5 +5,5 @@ using UnityEngine;
 
 public interface IFlammable
 {
-    void Ignite(float timeToLive);
+    void Ignite();
 }

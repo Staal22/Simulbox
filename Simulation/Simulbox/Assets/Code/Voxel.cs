@@ -45,6 +45,7 @@ public class Voxel : MonoBehaviour
                 break;
             case VoxelType.Wood:
                 material = SceneTools.Instance.voxelMaterials[(int)type];
+                gameObject.AddComponent<FlammableObject>();
                 density = 1f;
                 break;
             case VoxelType.Water:
@@ -53,24 +54,6 @@ public class Voxel : MonoBehaviour
                 break;
         }
         _meshRenderer.material = material;
-    }
-
-    private void Update()
-    {
-        switch (type)
-        {
-            case VoxelType.Base:
-            default:
-                throw new NotImplementedException();
-            case VoxelType.Grass:
-                break;
-            case VoxelType.Sand:
-                break;
-            case VoxelType.Wood:
-                break;
-            case VoxelType.Water:
-                break;
-        }
     }
 }
 
