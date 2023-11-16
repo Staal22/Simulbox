@@ -6,10 +6,11 @@ using UnityEngine.Serialization;
 
 public class IndicatorObject : MonoBehaviour
 {
-    // [SerializeField] private Texture2D fireCursor;
-    
+    private VoxelManager _voxelManager;
     private MeshFilter _meshFilter;
     private MeshRenderer _meshRenderer;
+    private VoxelType _oldVoxelType = VoxelType.Grass;
+    private bool _singleVoxel;
     
     private void Awake()
     {
@@ -19,15 +20,24 @@ public class IndicatorObject : MonoBehaviour
 
     private void Start()
     {
-        HandleVoxelTypeChanged(VoxelType.Grass);
-        VoxelManager.Instance.OnVoxelTypeChanged += HandleVoxelTypeChanged;
+        _voxelManager = VoxelManager.Instance;
+        _voxelManager.OnVoxelTypeChanged += HandleVoxelTypeChanged;
+        InteractMenu.Instance.OnPaintModeChanged += SetDrawMode;
+        HandleVoxelTypeChanged(_voxelManager.CurrentVoxelType);
     }
 
     private void OnDestroy()
     {
-        VoxelManager.Instance.OnVoxelTypeChanged -= HandleVoxelTypeChanged;
+        _voxelManager.OnVoxelTypeChanged -= HandleVoxelTypeChanged;
+        InteractMenu.Instance.OnPaintModeChanged -= SetDrawMode;
     }
 
+    private void SetDrawMode(bool singleVoxel)
+    {
+        _singleVoxel = singleVoxel;
+        HandleVoxelTypeChanged(_oldVoxelType);
+    }
+    
     private void HandleVoxelTypeChanged(VoxelType voxelType)
     {
         switch (voxelType)
@@ -36,30 +46,25 @@ public class IndicatorObject : MonoBehaviour
                 default:
                 throw new ArgumentOutOfRangeException(nameof(voxelType), voxelType, null);
             case VoxelType.Grass:
-                _meshFilter.mesh = VoxelManager.Instance.IndicatorMeshes[(int)VoxelType.Grass];
+                _meshFilter.mesh = _singleVoxel ? _voxelManager.IndicatorSingleMeshes[(int)VoxelType.Grass] : _voxelManager.IndicatorGroupMeshes[(int)VoxelType.Grass];
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Grass];
-                // Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
             case VoxelType.Sand:
-                // TODO - merge scene tools and voxel manager?
-                _meshFilter.mesh = VoxelManager.Instance.IndicatorMeshes[(int)VoxelType.Sand];
+                _meshFilter.mesh = _singleVoxel ? _voxelManager.IndicatorSingleMeshes[(int)VoxelType.Sand] : _voxelManager.IndicatorGroupMeshes[(int)VoxelType.Sand];
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Sand];
-                // Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
             case VoxelType.Wood:
-                _meshFilter.mesh = VoxelManager.Instance.IndicatorMeshes[(int)VoxelType.Wood];
+                _meshFilter.mesh = _singleVoxel ? _voxelManager.IndicatorSingleMeshes[(int)VoxelType.Wood] : _voxelManager.IndicatorGroupMeshes[(int)VoxelType.Wood];
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Wood];
-                // Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
             case VoxelType.Water:
-                _meshFilter.mesh = VoxelManager.Instance.IndicatorMeshes[(int)VoxelType.Water];
+                _meshFilter.mesh = _singleVoxel ? _voxelManager.IndicatorSingleMeshes[(int)VoxelType.Water] : _voxelManager.IndicatorGroupMeshes[(int)VoxelType.Water];
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Water];
-                // Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
             case VoxelType.Fire:
                 _meshFilter.mesh = null;
-                // Cursor.SetCursor(fireCursor, Vector2.zero, CursorMode.Auto);
                 break;
         }
+        _oldVoxelType = voxelType;
     }
 }

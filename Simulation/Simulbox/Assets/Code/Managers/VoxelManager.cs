@@ -9,30 +9,29 @@ public class VoxelManager : MonoBehaviour
 {
     public static VoxelManager Instance;
     
-    [SerializeField] private GameObject voxelPrefab;
-    public GameObject fireEffectPrefab;
-    
-    [NonSerialized] public Mesh[] IndicatorMeshes;
-    [NonSerialized] public bool PaintMode;
-    
     public VoxelType CurrentVoxelType { get; private set; } = VoxelType.Grass;
     public Action<VoxelType> OnVoxelTypeChanged;
+    public GameObject fireEffectPrefab;
+    [SerializeField] private GameObject voxelPrefab;
+    
+    [NonSerialized] public Mesh[] IndicatorGroupMeshes;
+    [NonSerialized] public Mesh[] IndicatorSingleMeshes;
 
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
-        IndicatorMeshes = new Mesh[Enum.GetNames(typeof(VoxelType)).Length];
-        for (var i = 1; i < IndicatorMeshes.Length; i++)
+        IndicatorGroupMeshes = new Mesh[Enum.GetNames(typeof(VoxelType)).Length];
+        for (var i = 1; i < IndicatorGroupMeshes.Length - 1; i++)
         {
-            if (i == (int)VoxelType.Fire) continue;
-            IndicatorMeshes[i] = GetIndicatorMesh((VoxelType) i);
+            IndicatorGroupMeshes[i] = GetIndicatorMesh((VoxelType)i, true);
+        }
+        IndicatorSingleMeshes = new Mesh[Enum.GetNames(typeof(VoxelType)).Length];
+        for (var i = 1; i < IndicatorSingleMeshes.Length - 1; i++)
+        {
+            IndicatorSingleMeshes[i] = GetIndicatorMesh((VoxelType)i, false);
         }
     }
-
+    
     public void SetCurrentVoxelType(VoxelType newType)
     {
         CurrentVoxelType = newType;
@@ -133,30 +132,40 @@ public class VoxelManager : MonoBehaviour
         return voxelGroup;
     }
 
-    private Mesh GetIndicatorMesh(VoxelType voxelType)
+    private Mesh GetIndicatorMesh(VoxelType voxelType, bool asGroup)
     {
-         var voxelGroup = SpawnVoxelGroup(Vector3.zero, voxelType);
-
-        var count = voxelGroup.Count;
-        // Create CombineInstance from the amount of voxels
-        var cInstance = new CombineInstance[count];
-        
-        // Initialize CombineInstance from MeshFilter of each voxel
-        for (int i = 0; i < count; i++)
+        var mesh = new Mesh();
+        if (asGroup)
         {
-            // Get current Mesh Filter and initialize each CombineInstance 
-            MeshFilter cFilter = voxelGroup[i].GetComponent<MeshFilter>();
+            var voxelGroup = SpawnVoxelGroup(Vector3.zero, voxelType);
 
-            // Get each Mesh and position
-            cInstance[i].mesh = cFilter.sharedMesh;
-            cInstance[i].transform = cFilter.transform.localToWorldMatrix;
-            // Clean up voxel
+            var count = voxelGroup.Count;
+            // Create CombineInstance from the amount of voxels
+            var cInstance = new CombineInstance[count];
+        
+            // Initialize CombineInstance from MeshFilter of each voxel
+            for (int i = 0; i < count; i++)
+            {
+                // Get current Mesh Filter and initialize each CombineInstance 
+                MeshFilter cFilter = voxelGroup[i].GetComponent<MeshFilter>();
+
+                // Get each Mesh and position
+                cInstance[i].mesh = cFilter.sharedMesh;
+                cInstance[i].transform = cFilter.transform.localToWorldMatrix;
+                // Clean up voxel
+                Destroy(cFilter.gameObject);
+            }
+
+            // Create combined mesh
+            mesh.CombineMeshes(cInstance);
+        }
+        else
+        {
+            var voxel = SpawnVoxel(Vector3.zero, voxelType);
+            var cFilter = voxel.GetComponent<MeshFilter>();
+            mesh = cFilter.sharedMesh;
             Destroy(cFilter.gameObject);
         }
-
-        // Create combined mesh
-        var mesh = new Mesh();
-        mesh.CombineMeshes(cInstance);
         
         return mesh;
     }

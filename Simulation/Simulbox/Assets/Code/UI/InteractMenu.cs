@@ -3,9 +3,17 @@ using System;
 
 public class InteractMenu : MonoBehaviour
 {
+    public static InteractMenu Instance;
+    
+    public Action<bool> OnPaintModeChanged;
     private Action<VoxelType> _onNewVoxelTypeSelected;
     private VoxelType _selectedVoxelType = VoxelType.Sand;
-    
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         SetSelectedVoxelType(_selectedVoxelType);
@@ -25,6 +33,6 @@ public class InteractMenu : MonoBehaviour
     
     public void SetPaintMode(bool paintMode)
     {
-        VoxelManager.Instance.PaintMode = paintMode;
+        OnPaintModeChanged?.Invoke(paintMode);
     }
 }

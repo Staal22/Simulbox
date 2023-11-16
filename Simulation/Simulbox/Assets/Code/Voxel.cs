@@ -17,43 +17,44 @@ public class Voxel : MonoBehaviour
     public VoxelType type;
     public float burnTime;
     
+    private SceneTools _sceneTools;
     private MeshRenderer _meshRenderer;
     
-    // public float density;
-
     private void Awake()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
+    }
+
+    private void OnEnable()
+    {
+        _sceneTools = SceneTools.Instance;
     }
 
     public void Init(VoxelType inType)
     {
         type = inType;
         Material material;
-        // initialize values based on type
+        // Initialize values based on type
         switch (type)
         {
             case VoxelType.Base:
             default:
                 throw new NotImplementedException();
             case VoxelType.Grass:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
-                // density = 1f;
+                material = _sceneTools.voxelMaterials[(int)VoxelType.Grass];
                 burnTime = 2f;
                 gameObject.AddComponent<FlammableObject>();
                 break;
             case VoxelType.Sand:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
-                // density = 1f;
+                material = _sceneTools.voxelMaterials[(int)VoxelType.Sand];
                 break;
             case VoxelType.Wood:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
+                material = _sceneTools.voxelMaterials[(int)VoxelType.Wood];
                 burnTime = 5f;
                 gameObject.AddComponent<FlammableObject>();
                 break;
             case VoxelType.Water:
-                material = SceneTools.Instance.voxelMaterials[(int)type];
-                // density = 0.5f;
+                material = _sceneTools.voxelMaterials[(int)VoxelType.Water];
                 break;
         }
         _meshRenderer.material = material;

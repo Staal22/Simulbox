@@ -11,11 +11,17 @@ public class InputManager : MonoBehaviour
     
     private CommandInvoker _commandInvoker;
     private float _yOffset;
+    private bool _paintMode;
 
-    private void Start()
+    private void Awake()
     {
         _commandInvoker = new CommandInvoker();
         outlineIndicatorPrefab = Instantiate(outlineIndicatorPrefab);
+    }
+
+    private void Start()
+    {
+        InteractMenu.Instance.OnPaintModeChanged += SetPaintMode;
     }
 
     private void Update()
@@ -52,8 +58,11 @@ public class InputManager : MonoBehaviour
             outlineIndicatorPrefab.transform.position = point;
             if (Input.GetMouseButtonDown(0))
             {
-                // ICommand command = new AddVoxelCommand(hitInfo.point);
-                ICommand command = new AddVoxelGroup(point);
+                ICommand command;
+                if (_paintMode)
+                    command = new AddVoxel(point);
+                else
+                    command = new AddVoxelGroup(point);
                 _commandInvoker.ExecuteCommand(command);
                 _yOffset = 0f;
             }
@@ -67,5 +76,10 @@ public class InputManager : MonoBehaviour
         {
             _commandInvoker.Redo();
         }
+    }
+    
+    private void SetPaintMode(bool paintMode)
+    {
+        _paintMode = paintMode;
     }
 }
