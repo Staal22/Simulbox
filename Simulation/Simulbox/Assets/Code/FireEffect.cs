@@ -1,12 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FireEffect : MonoBehaviour
 {
-    // private readonly List<Voxel> _voxels = new();
-    private readonly List<FlammableObject> _flammables = new();
+    private readonly HashSet<FlammableObject> _flammables = new();
     private bool _beingDestroyed;
+    private float _burnTimer = 0.3f;
 
     private void Start()
     {
@@ -19,25 +20,23 @@ public class FireEffect : MonoBehaviour
         if (_flammables.Count == 0)
         {
             _beingDestroyed = true;
-            Invoke(nameof(Extinguish), 3f);
-        }
-        InvokeRepeating(nameof(BurnFlammables), 0.3f, 0.3f);
-    }
-
-    private void Extinguish()
-    {
-        if (_beingDestroyed)
-        {
-            Destroy(gameObject);
+            ExtinguishAfterDelay(3f);
         }
     }
 
     private void Update()
     {
+        _burnTimer -= Time.deltaTime;
+        if (_burnTimer <= 0)
+        {
+            BurnFlammables();
+            _burnTimer = 0.3f;
+        }
+
         if (_flammables.Count == 0 && !_beingDestroyed)
         {
             _beingDestroyed = true;
-            Invoke(nameof(Extinguish), 3f);
+            ExtinguishAfterDelay(3f);
         }
     }
 
@@ -49,13 +48,13 @@ public class FireEffect : MonoBehaviour
         if (voxel == null) return;
         if (voxel.type == VoxelType.Water)
         {
-            Extinguish();            
+            Extinguish();
         }
         else
         {
             var flammable = voxel.GetComponent<FlammableObject>();
             if (flammable == null || flammable.Burning) return;
-            
+
             _flammables.Add(flammable);
             _beingDestroyed = false;
         }
@@ -68,22 +67,46 @@ public class FireEffect : MonoBehaviour
             Extinguish();
         }
         if (_flammables.Count == 0) return;
-
-        for (int i = _flammables.Count - 1; i >= 0; i--)
+    
+        var toRemove = new List<FlammableObject>();
+    
+        foreach (var flammable in _flammables)
         {
-            if (_flammables[i].Burning)
+            if (flammable.Burning)
             {
-                _flammables.RemoveAt(i);
+                toRemove.Add(flammable);
             }
             else
             {
-                _flammables[i].Ignite();
+                flammable.Ignite();
                 if (!_beingDestroyed)
                 {
                     _beingDestroyed = true;
-                    Invoke(nameof(Extinguish), _flammables[i].timeToLive);
+                    ExtinguishAfterDelay(flammable.timeToLive);
                 }
             }
         }
+        foreach (var flammable in toRemove)
+        {
+            _flammables.Remove(flammable);
+        }
+    }
+    
+    private void Extinguish()
+    {
+        if (_beingDestroyed)
+        {
+            Destroy(gameObject);
+        }
+    }
+    private void ExtinguishAfterDelay(float delay)
+    {
+        StartCoroutine(ExtinguishCoroutine(delay));
+    }
+
+    private IEnumerator ExtinguishCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Extinguish();
     }
 }
