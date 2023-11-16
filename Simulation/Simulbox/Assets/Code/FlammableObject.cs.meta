@@ -3,7 +3,9 @@ guid: 245576d3844f089479c9b9996638dd89
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - fireEffectPrefab: {fileID: 8082496655887322526, guid: 321a9ac36d3063445a4d61589a623ebe,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

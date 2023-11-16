@@ -5,13 +5,29 @@ using UnityEngine;
 
 public class FireEffect : MonoBehaviour
 {
+    private readonly List<FlammableObject> _flammables = new();
     private const float BurnTimeSeconds = 5;
     private float _burnCounter;
+
+    private void Start()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position + new Vector3(0,2,0), 2.5f);
+        
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.gameObject == gameObject) continue;
+            var flammable = hitCollider.gameObject.GetComponent<FlammableObject>();
+            if (flammable == null) continue;
+            if (flammable.Burning) continue;
+            
+            _flammables.Add(flammable);
+        }
+    }
 
     private void FixedUpdate()
     {
         _burnCounter += Time.deltaTime;
-        BurnAdjacentObjects();
+        BurnFlammables();
         if (_burnCounter >= BurnTimeSeconds)
         {
             Extinguish();
@@ -23,28 +39,35 @@ public class FireEffect : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void BurnAdjacentObjects()
+    private void OnTriggerEnter(Collider other)
     {
-        // TODO - fix spreading so it works properly!
-        // Check for adjacent flammable objects and ignite them
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2);
+        var flammable = other.gameObject.GetComponent<FlammableObject>();
+        if (flammable == null) return;
+        if (other.gameObject.GetComponent<FlammableObject>().Burning) return;
+        _flammables.Add(flammable);
+    }
 
-        foreach (Collider hitCollider in hitColliders)
+    private void OnTriggerExit(Collider other)
+    {
+        var flammable = other.gameObject.GetComponent<FlammableObject>();
+        if (flammable == null) return;
+        if (other.gameObject.GetComponent<FlammableObject>().Burning) return;
+        _flammables.Remove(flammable);
+    }
+
+    private void BurnFlammables()
+    {
+        if (_flammables.Count == 0) return;
+        for (int i = _flammables.Count - 1; i >= 0; i--)
         {
-            if (hitCollider.gameObject != gameObject)
+            if (_flammables[i].Burning)
             {
-                if (hitCollider.gameObject.GetComponent<FireEffect>() != null)
-                {
-                    continue;
-                }
-                var flammable = hitCollider.gameObject.GetComponent<FlammableObject>();
-                if (flammable != null)
-                {
-                    flammable.Ignite(BurnTimeSeconds);
-                    hitCollider.gameObject.AddComponent<FireEffect>();
-                }
+                _flammables.RemoveAt(i);
+            }
+            else
+            {
+                _flammables[i].Ignite(BurnTimeSeconds);
             }
         }
     }
-
 }

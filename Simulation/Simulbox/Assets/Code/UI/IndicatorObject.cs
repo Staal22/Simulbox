@@ -36,13 +36,13 @@ public class IndicatorObject : MonoBehaviour
                 default:
                 throw new ArgumentOutOfRangeException(nameof(voxelType), voxelType, null);
             case VoxelType.Grass:
-                _meshFilter.mesh = VoxelManager.Instance.indicatorMeshes[(int)VoxelType.Grass];
+                _meshFilter.mesh = VoxelManager.Instance.IndicatorMeshes[(int)VoxelType.Grass];
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Grass];
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
             case VoxelType.Sand:
                 // TODO - merge scene tools and voxel manager?
-                _meshFilter.mesh = VoxelManager.Instance.indicatorMeshes[(int)VoxelType.Sand];
+                _meshFilter.mesh = VoxelManager.Instance.IndicatorMeshes[(int)VoxelType.Sand];
                 _meshRenderer.material = SceneTools.Instance.voxelMaterials[(int)VoxelType.Sand];
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;

@@ -10,9 +10,9 @@ public class VoxelManager : MonoBehaviour
     public static VoxelManager Instance;
     
     [SerializeField] private GameObject voxelPrefab;
-    [SerializeField] private GameObject fireEffectPrefab;
+    public GameObject fireEffectPrefab;
     
-    public Mesh[] indicatorMeshes;
+    [NonSerialized] public Mesh[] IndicatorMeshes;
     
     public VoxelType CurrentVoxelType { get; private set; } = VoxelType.Grass;
     public Action<VoxelType> OnVoxelTypeChanged;
@@ -24,10 +24,11 @@ public class VoxelManager : MonoBehaviour
 
     private void Start()
     {
-        indicatorMeshes = new Mesh[Enum.GetNames(typeof(VoxelType)).Length];
-        for (var i = 1; i < indicatorMeshes.Length; i++)
+        IndicatorMeshes = new Mesh[Enum.GetNames(typeof(VoxelType)).Length];
+        for (var i = 1; i < IndicatorMeshes.Length; i++)
         {
-            indicatorMeshes[i] = GetIndicatorMesh((VoxelType) i);
+            if (i == (int)VoxelType.Fire) continue;
+            IndicatorMeshes[i] = GetIndicatorMesh((VoxelType) i);
         }
     }
 
