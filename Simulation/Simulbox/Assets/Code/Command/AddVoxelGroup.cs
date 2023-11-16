@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AddVoxelGroup : ICommand
@@ -21,6 +22,10 @@ public class AddVoxelGroup : ICommand
 
     public void Undo()
     {
-        foreach (var gameObject in _voxelGroup) Object.Destroy(gameObject);
+        if (_voxelGroup == null) return;
+        foreach (var gameObject in _voxelGroup.Where(gameObject => gameObject != null))
+        {
+            Object.Destroy(gameObject);
+        }
     }
 }

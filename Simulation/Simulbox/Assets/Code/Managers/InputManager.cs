@@ -54,20 +54,29 @@ public class InputManager : MonoBehaviour
         if (Physics.Raycast(ray, out var hit))
         {
             var point = hit.point + Vector3.up * _yOffset;
-            
             outlineIndicatorPrefab.transform.position = point;
-            if (Input.GetMouseButtonDown(0))
+            
+            if (_paintMode)
             {
-                ICommand command;
-                if (_paintMode)
-                    command = new AddVoxel(point);
-                else
-                    command = new AddVoxelGroup(point);
-                _commandInvoker.ExecuteCommand(command);
-                _yOffset = 0f;
+                if (Input.GetMouseButton(0))
+                {
+                    ICommand command = new AddVoxel(point);
+                    _commandInvoker.ExecuteCommand(command);
+                }
+            }
+            else
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    ICommand command = new AddVoxelGroup(point);
+                    _commandInvoker.ExecuteCommand(command);
+                }
             }
         }
-
+        if (Input.GetMouseButtonUp(0))
+        {
+            _yOffset = 0f;
+        }
         if (Input.GetKeyDown(KeyCode.Z))
         {
             _commandInvoker.Undo();

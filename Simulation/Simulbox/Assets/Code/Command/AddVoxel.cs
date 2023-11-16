@@ -22,6 +22,7 @@ public class AddVoxel : ICommand
 
     public void Undo()
     {
+        if (_voxel == null) return;
         Object.Destroy(_voxel);
     }
 }

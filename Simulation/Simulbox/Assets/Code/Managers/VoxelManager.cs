@@ -40,6 +40,11 @@ public class VoxelManager : MonoBehaviour
 
     public GameObject SpawnVoxel(Vector3 spawnPoint, VoxelType voxelToSpawn)
     {
+        if (voxelToSpawn == VoxelType.Fire)
+        {
+            Instantiate(fireEffectPrefab, spawnPoint, Quaternion.identity);
+            return null;
+        }
         var voxel = Instantiate(voxelPrefab, spawnPoint, Quaternion.identity);
         var voxelComponent = voxel.GetComponent<Voxel>();
         voxelComponent.Init(voxelToSpawn);
