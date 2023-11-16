@@ -14,10 +14,12 @@ public enum VoxelType : int
 
 public class Voxel : MonoBehaviour
 {
-    [SerializeField] private VoxelType type;
-
+    public VoxelType type;
+    public float burnTime;
+    
     private MeshRenderer _meshRenderer;
-    public float density;
+    
+    // public float density;
 
     private void Awake()
     {
@@ -36,21 +38,22 @@ public class Voxel : MonoBehaviour
                 throw new NotImplementedException();
             case VoxelType.Grass:
                 material = SceneTools.Instance.voxelMaterials[(int)type];
-                density = 1f;
+                // density = 1f;
+                burnTime = 2f;
                 gameObject.AddComponent<FlammableObject>();
                 break;
             case VoxelType.Sand:
                 material = SceneTools.Instance.voxelMaterials[(int)type];
-                density = 1f;
+                // density = 1f;
                 break;
             case VoxelType.Wood:
                 material = SceneTools.Instance.voxelMaterials[(int)type];
+                burnTime = 5f;
                 gameObject.AddComponent<FlammableObject>();
-                density = 1f;
                 break;
             case VoxelType.Water:
                 material = SceneTools.Instance.voxelMaterials[(int)type];
-                density = 0.5f;
+                // density = 0.5f;
                 break;
         }
         _meshRenderer.material = material;

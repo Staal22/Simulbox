@@ -17,4 +17,14 @@ public class InteractMenu : MonoBehaviour
         _selectedVoxelType = newType;
         _onNewVoxelTypeSelected?.Invoke(_selectedVoxelType);
     }
+
+    public void ResetSimulation()
+    {
+        VoxelManager.Instance.ClearVoxels();
+    }
+    
+    public void SetPaintMode(bool paintMode)
+    {
+        VoxelManager.Instance.PaintMode = paintMode;
+    }
 }

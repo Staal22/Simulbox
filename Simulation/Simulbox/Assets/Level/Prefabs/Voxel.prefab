@@ -147,4 +147,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  density: 0
+  burnTime: 0

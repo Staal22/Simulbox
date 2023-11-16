@@ -5,36 +5,40 @@ using UnityEngine;
 
 public class FlammableObject : MonoBehaviour, IFlammable
 {
-    public event Action OnDisintegrated;
+    private Color _burntWood;
+    private Color _burntGrass;
     
     private GameObject _fireEffectPrefab;
     private MeshRenderer _meshRenderer;
-    private const float TimeToLive = 5f;
+    private Voxel _voxel;
+    public float timeToLive = 5f;
     [NonSerialized] public bool Burning;
 
     private void Awake()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
+        _voxel = GetComponent<Voxel>();
+        timeToLive = _voxel.burnTime;
     }
 
     private void Start()
     {
         _fireEffectPrefab = VoxelManager.Instance.fireEffectPrefab;
+        _burntWood = SceneTools.Instance.burntWood;
+        _burntGrass = SceneTools.Instance.burntGrass;
     }
 
     public void Ignite()
     {
         Burning = true;
-        // change material color to reflect being burnt
-        _meshRenderer.material.color = Color.black;
-        // destroy self after a few seconds
-        Invoke(nameof(Disintegrate), TimeToLive);
+        // _meshRenderer.material.color = Color.black;
+        _meshRenderer.material.color = timeToLive > 2f ? _burntWood : _burntGrass;
+        Invoke(nameof(Disintegrate), timeToLive);
         Instantiate(_fireEffectPrefab, transform.position, Quaternion.identity);
     }
     
     private void Disintegrate()
     {
-        OnDisintegrated?.Invoke();
         Destroy(gameObject);
     }
 }

@@ -13,6 +13,7 @@ public class VoxelManager : MonoBehaviour
     public GameObject fireEffectPrefab;
     
     [NonSerialized] public Mesh[] IndicatorMeshes;
+    [NonSerialized] public bool PaintMode;
     
     public VoxelType CurrentVoxelType { get; private set; } = VoxelType.Grass;
     public Action<VoxelType> OnVoxelTypeChanged;
@@ -158,5 +159,19 @@ public class VoxelManager : MonoBehaviour
         mesh.CombineMeshes(cInstance);
         
         return mesh;
+    }
+    
+    public void ClearVoxels()
+    {
+        var voxels = FindObjectsOfType<Voxel>();
+        foreach (var voxel in voxels)
+        {
+            Destroy(voxel.gameObject);
+        }
+        var fires = FindObjectsOfType<FireEffect>();
+        foreach (var fire in fires)
+        {
+            Destroy(fire.gameObject);
+        }
     }
 }
