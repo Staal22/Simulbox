@@ -13,6 +13,7 @@ public class VoxelManager : MonoBehaviour
     public Action<VoxelType> OnVoxelTypeChanged;
     public GameObject fireEffectPrefab;
     [SerializeField] private GameObject voxelPrefab;
+    [SerializeField] private GameObject waterVoxelPrefab;
     
     [NonSerialized] public Mesh[] IndicatorGroupMeshes;
     [NonSerialized] public Mesh[] IndicatorSingleMeshes;
@@ -45,10 +46,20 @@ public class VoxelManager : MonoBehaviour
             Instantiate(fireEffectPrefab, spawnPoint, Quaternion.identity);
             return null;
         }
-        var voxel = Instantiate(voxelPrefab, spawnPoint, Quaternion.identity);
-        var voxelComponent = voxel.GetComponent<Voxel>();
-        voxelComponent.Init(voxelToSpawn);
-        return voxel;
+        if (voxelToSpawn == VoxelType.Water)
+        {
+            var voxel = Instantiate(waterVoxelPrefab, spawnPoint, Quaternion.identity);
+            var voxelComponent = voxel.GetComponent<Voxel>();
+            voxelComponent.Init(voxelToSpawn);
+            return voxel;
+        }
+        else
+        {
+            var voxel = Instantiate(voxelPrefab, spawnPoint, Quaternion.identity);
+            var voxelComponent = voxel.GetComponent<Voxel>();
+            voxelComponent.Init(voxelToSpawn);
+            return voxel;
+        }
     }
     
     public List<GameObject> SpawnVoxelGroup(Vector3 spawnPoint, VoxelType voxelToSpawn)
@@ -120,7 +131,7 @@ public class VoxelManager : MonoBehaviour
                         {
                             if (Vector3.Distance(new Vector3(x, y, z), spawnPoint) < 2.5f)
                             {
-                                var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
+                                var voxel = Instantiate(waterVoxelPrefab, new Vector3(x, y, z), Quaternion.identity);
                                 var voxelComponent = voxel.GetComponent<Voxel>();
                                 voxelComponent.Init(voxelToSpawn);
                                 voxelGroup.Add(voxel);

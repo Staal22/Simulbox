@@ -2182,9 +2182,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57db3c805fb634f4ab8d555629b3466f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fireEffectPrefab: {fileID: 8082496655887322526, guid: 321a9ac36d3063445a4d61589a623ebe,
+    type: 3}
   voxelPrefab: {fileID: 3347412916246321775, guid: a5284479e8c694a4ab8b4b0d3fb4e0b6,
     type: 3}
-  fireEffectPrefab: {fileID: 8082496655887322526, guid: 321a9ac36d3063445a4d61589a623ebe,
+  waterVoxelPrefab: {fileID: 3347412916246321775, guid: 06c6ab75021503d428bf8121de3f2608,
     type: 3}
 --- !u!1 &761922906
 GameObject:
