@@ -93,9 +93,9 @@ public class VoxelManager : MonoBehaviour
                 {
                     for (var z = spawnPoint.z -2.5f; z < spawnPoint.z + 2.5f; z++)
                     {
-                        for (var y = spawnPoint.y -2.5f; y < spawnPoint.y + 2.5f; y++)
+                        for (var y = spawnPoint.y + 1f; y < spawnPoint.y + 6f; y++)
                         {
-                            if (Vector3.Distance(new Vector3(x, y, z), spawnPoint) < 2.5f)
+                            if (Vector3.Distance(new Vector3(x, y, z), spawnPoint + new Vector3(0,3.5f,0)) < 2.5f)
                             {
                                 var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
                                 var voxelComponent = voxel.GetComponent<Voxel>();
@@ -112,7 +112,7 @@ public class VoxelManager : MonoBehaviour
                 {
                     for (var z = spawnPoint.z -2.5f; z < spawnPoint.z + 2.5f; z++)
                     {
-                        for (var y = spawnPoint.y -2.5f; y < spawnPoint.y + 2.5f; y++)
+                        for (var y = spawnPoint.y + 1f; y < spawnPoint.y + 6f; y++)
                         {
                             var voxel = Instantiate(voxelPrefab, new Vector3(x, y, z), Quaternion.identity);
                             var voxelComponent = voxel.GetComponent<Voxel>();
@@ -127,9 +127,9 @@ public class VoxelManager : MonoBehaviour
                 {
                     for (var z = spawnPoint.z -2.5f; z < spawnPoint.z + 2.5f; z++)
                     {
-                        for (var y = spawnPoint.y -2.5f; y < spawnPoint.y + 2.5f; y++)
+                        for (var y = spawnPoint.y + 1f; y < spawnPoint.y + 6; y++)
                         {
-                            if (Vector3.Distance(new Vector3(x, y, z), spawnPoint) < 2.5f)
+                            if (Vector3.Distance(new Vector3(x, y, z), spawnPoint + new Vector3(0,3.5f,0)) < 2.5f)
                             {
                                 var voxel = Instantiate(waterVoxelPrefab, new Vector3(x, y, z), Quaternion.identity);
                                 var voxelComponent = voxel.GetComponent<Voxel>();

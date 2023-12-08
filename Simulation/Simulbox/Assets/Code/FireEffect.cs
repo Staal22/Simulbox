@@ -48,6 +48,10 @@ public class FireEffect : MonoBehaviour
         if (voxel == null) return;
         if (voxel.type == VoxelType.Water)
         {
+            foreach (var flammable in _flammables)
+            {
+                flammable.StopBurning();
+            }
             Extinguish();
         }
         else

@@ -37,6 +37,12 @@ public class FlammableObject : MonoBehaviour, IFlammable
         Instantiate(_fireEffectPrefab, transform.position, Quaternion.identity);
     }
     
+    public void StopBurning()
+    {
+        Burning = false;
+        CancelInvoke(nameof(Disintegrate));
+    }
+    
     private void Disintegrate()
     {
         Destroy(gameObject);
