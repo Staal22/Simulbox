@@ -3,7 +3,18 @@ using System;
 
 public class InteractMenu : MonoBehaviour
 {
-    public static InteractMenu Instance;
+    private static InteractMenu _instance;
+    public static InteractMenu Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<InteractMenu>();
+            }
+            return _instance;
+        }
+    }
     
     public Action<bool> OnPaintModeChanged;
     private Action<VoxelType> _onNewVoxelTypeSelected;
@@ -11,7 +22,15 @@ public class InteractMenu : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == this)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Debug.Log("Multiple InteractMenu objects detected: removing this one.");
+            Destroy(this);
+        }
     }
 
     private void Start()

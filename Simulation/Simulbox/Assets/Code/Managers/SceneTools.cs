@@ -5,23 +5,19 @@ using UnityEngine;
 
 public class SceneTools : MonoBehaviour
 {
-    private static SceneTools instance;
+    private static SceneTools _instance;
     public static SceneTools Instance
     {
         get
         {
-            if (instance == null) 
+            if (_instance == null)
             {
-                instance = FindObjectOfType<SceneTools>();
-
-                if (instance == null) 
-                {
-                    Debug.Log("SceneTools object must exist in scene.");
-                }
+                _instance = FindObjectOfType<SceneTools>();
             }
-            return instance;
+            return _instance;
         }
     }
+    
     [field: SerializeField] public Material[] voxelMaterials;
     [field: SerializeField] public Texture2D[] voxelIcons;
     
@@ -30,14 +26,14 @@ public class SceneTools : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null && instance != this) 
+        if (Instance == this)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else
         {
             Debug.Log("Multiple SceneTools objects detected: removing this one.");
-            Destroy(this.gameObject);
-        } 
-        else 
-        {
-            instance = this;
+            Destroy(this);
         }
     }
 }

@@ -4,3 +4,6 @@ Documents/*.tmp
 
 # Obsidian
 .obsidian
+
+*.zip
+*.mp4

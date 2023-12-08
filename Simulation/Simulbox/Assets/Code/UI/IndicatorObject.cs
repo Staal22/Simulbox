@@ -9,6 +9,7 @@ public class IndicatorObject : MonoBehaviour
     private VoxelManager _voxelManager;
     private MeshFilter _meshFilter;
     private MeshRenderer _meshRenderer;
+    private InteractMenu _interactMenu;
     private VoxelType _oldVoxelType = VoxelType.Grass;
     private bool _singleVoxel;
     
@@ -20,16 +21,17 @@ public class IndicatorObject : MonoBehaviour
 
     private void Start()
     {
+        _interactMenu = InteractMenu.Instance;
         _voxelManager = VoxelManager.Instance;
         _voxelManager.OnVoxelTypeChanged += HandleVoxelTypeChanged;
-        InteractMenu.Instance.OnPaintModeChanged += SetDrawMode;
+        _interactMenu.OnPaintModeChanged += SetDrawMode;
         HandleVoxelTypeChanged(_voxelManager.CurrentVoxelType);
     }
 
     private void OnDestroy()
     {
         _voxelManager.OnVoxelTypeChanged -= HandleVoxelTypeChanged;
-        InteractMenu.Instance.OnPaintModeChanged -= SetDrawMode;
+        _interactMenu.OnPaintModeChanged -= SetDrawMode;
     }
 
     private void SetDrawMode(bool singleVoxel)

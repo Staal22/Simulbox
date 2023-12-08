@@ -7,7 +7,18 @@ using Random = UnityEngine.Random;
 
 public class VoxelManager : MonoBehaviour
 {
-    public static VoxelManager Instance;
+    private static VoxelManager _instance;
+    public static VoxelManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<VoxelManager>();
+            }
+            return _instance;
+        }
+    }
     
     public VoxelType CurrentVoxelType { get; private set; } = VoxelType.Grass;
     public Action<VoxelType> OnVoxelTypeChanged;
@@ -20,7 +31,15 @@ public class VoxelManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == this)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Debug.Log("Multiple VoxelManager objects detected: removing this one.");
+            Destroy(this);
+        }
         IndicatorGroupMeshes = new Mesh[Enum.GetNames(typeof(VoxelType)).Length];
         for (var i = 1; i < IndicatorGroupMeshes.Length - 1; i++)
         {
